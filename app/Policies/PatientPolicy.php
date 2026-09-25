@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\Patient;
+use App\Models\User;
+
+class PatientPolicy
+{
+    public function viewAny(User $user): bool
+    {
+        return in_array($user->role, ['admin', 'receptionist', 'doctor', 'nurse']);
+    }
+
+    public function view(User $user, Patient $patient): bool
+    {
+        return in_array($user->role, ['admin', 'receptionist', 'doctor', 'nurse'])
+            || $user->id === $patient->user_id;
+    }
+
+    public function create(User $user): bool
+    {
+        return in_array($user->role, ['admin', 'receptionist']);
+    }
+
+    public function update(User $user, Patient $patient): bool
+    {
+        return in_array($user->role, ['admin', 'receptionist'])
+            || $user->id === $patient->user_id;
+    }
+
+    public function delete(User $user): bool
+    {
+        return $user->role === 'admin';
+    }
+}
