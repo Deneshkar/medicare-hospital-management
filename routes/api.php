@@ -1,10 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\AppointmentController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\DoctorController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PatientController;
+use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -21,4 +22,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/departments', [DepartmentController::class, 'index']);
     Route::get('/doctors', [DoctorController::class, 'index']);
     Route::apiResource('patients', PatientController::class);
+    Route::apiResource('appointments', AppointmentController::class)->except(['update']);
+    Route::patch('/appointments/{appointment}/status', [AppointmentController::class, 'updateStatus']);
 });

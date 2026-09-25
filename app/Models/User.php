@@ -4,11 +4,10 @@ namespace App\Models;
 
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use App\Models\Patient;
 
 class User extends Authenticatable
 {
@@ -52,9 +51,14 @@ class User extends Authenticatable
         ];
     }
 
-    public function patient(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function patient(): HasOne
     {
         return $this->hasOne(Patient::class);
+    }
+
+    public function doctor(): HasOne
+    {
+        return $this->hasOne(Doctor::class);
     }
 
     /**
