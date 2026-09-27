@@ -26,6 +26,21 @@ class Doctor extends Model
         return $this->hasMany(Appointment::class);
     }
 
+    public function medicalRecords(): HasMany
+    {
+        return $this->hasMany(MedicalRecord::class);
+    }
+
+    public function prescriptions(): HasMany
+    {
+        return $this->hasMany(Prescription::class);
+    }
+
+    public function labReports(): HasMany
+    {
+        return $this->hasMany(LabReport::class);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

@@ -7,6 +7,8 @@ use App\Http\Requests\StoreAppointmentRequest;
 use App\Http\Requests\UpdateAppointmentStatusRequest;
 use App\Http\Resources\AppointmentResource;
 use App\Models\Appointment;
+use App\Notifications\AppointmentBooked;
+use App\Notifications\AppointmentStatusChanged;
 use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
@@ -46,6 +48,8 @@ class AppointmentController extends Controller
             'status' => 'pending',
         ]);
 
+        $appointment->patient->user->notify(new AppointmentBooked($appointment));
+
         return (new AppointmentResource($appointment->load(['patient.user', 'doctor.user'])))
             ->additional(['success' => true, 'message' => 'Appointment booked successfully']);
     }
@@ -63,6 +67,8 @@ class AppointmentController extends Controller
         $this->authorize('updateStatus', $appointment);
 
         $appointment->update(['status' => $request->status]);
+
+        $appointment->patient->user->notify(new AppointmentStatusChanged($appointment));
 
         return (new AppointmentResource($appointment->load(['patient.user', 'doctor.user'])))
             ->additional(['success' => true, 'message' => 'Appointment status updated']);

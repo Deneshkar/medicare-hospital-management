@@ -32,13 +32,17 @@ class AppointmentPolicy
         return match ($user->role) {
             'admin', 'receptionist' => true,
             'doctor' => $user->doctor?->id === $appointment->doctor_id,
-            'patient' => $user->patient?->id === $appointment->patient_id,
             default => false,
         };
     }
 
     public function cancel(User $user, Appointment $appointment): bool
     {
-        return $this->updateStatus($user, $appointment);
+        return match ($user->role) {
+            'admin', 'receptionist' => true,
+            'doctor' => $user->doctor?->id === $appointment->doctor_id,
+            'patient' => $user->patient?->id === $appointment->patient_id,
+            default => false,
+        };
     }
 }
