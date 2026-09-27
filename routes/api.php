@@ -58,4 +58,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
     Route::post('/ai/chat', [AiAssistantController::class, 'chat']);
     Route::get('/ai/history', [AiAssistantController::class, 'history']);
+    Route::delete('/ai/history', [AiAssistantController::class, 'clear']);
 });

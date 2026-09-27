@@ -32,7 +32,7 @@ class AiAssistantController extends Controller
             ->toArray();
 
         try {
-            $reply = $this->groqService->chat($history);
+            $reply = $this->groqService->chat($history, $patient);
         } catch (\RuntimeException $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 503);
         }
@@ -60,5 +60,14 @@ class AiAssistantController extends Controller
             ->get(['role', 'message', 'created_at']);
 
         return response()->json(['success' => true, 'data' => $history]);
+    }
+
+    public function clear(Request $request)
+    {
+        abort_if($request->user()->role !== 'patient', 403);
+
+        AiConversation::where('patient_id', $request->user()->patient->id)->delete();
+
+        return response()->json(['success' => true, 'message' => 'Chat history cleared.']);
     }
 }

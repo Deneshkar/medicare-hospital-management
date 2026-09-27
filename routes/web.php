@@ -70,5 +70,6 @@ Route::middleware('auth')->group(function () {
             ->name('notifications.read');
         Route::get('/ai', [AiAssistantController::class, 'index'])->name('ai.index');
         Route::post('/ai/chat', [AiAssistantController::class, 'chat'])->name('ai.chat');
+        Route::delete('/ai', [AiAssistantController::class, 'clear'])->name('ai.clear');
     });
 });

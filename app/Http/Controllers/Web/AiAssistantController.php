@@ -43,7 +43,7 @@ class AiAssistantController extends Controller
             ->toArray();
 
         try {
-            $reply = $this->groqService->chat($history);
+            $reply = $this->groqService->chat($history, $patient);
         } catch (\RuntimeException $e) {
             return redirect()->route('web.ai.index')
                 ->with('error', $e->getMessage());
@@ -57,5 +57,15 @@ class AiAssistantController extends Controller
 
         return redirect()->route('web.ai.index')
             ->with('success', 'Reply received.');
+    }
+
+    public function clear(Request $request)
+    {
+        abort_if($request->user()->role !== 'patient', 403);
+
+        AiConversation::where('patient_id', $request->user()->patient->id)->delete();
+
+        return redirect()->route('web.ai.index')
+            ->with('success', 'Chat history cleared.');
     }
 }

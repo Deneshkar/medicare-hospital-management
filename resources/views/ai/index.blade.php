@@ -4,7 +4,16 @@
 
 @section('content')
     <div class="mx-auto max-w-2xl">
-        <h1 class="mb-4 text-xl font-semibold">AI Patient Assistant</h1>
+        <div class="mb-4 flex items-center justify-between">
+            <h1 class="text-xl font-semibold">AI Patient Assistant</h1>
+            @if ($history->isNotEmpty())
+                <form method="POST" action="{{ route('web.ai.clear') }}" onsubmit="return confirm('Clear this chat history?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="rounded border px-3 py-1.5 text-sm hover:bg-slate-50">Clear chat</button>
+                </form>
+            @endif
+        </div>
         <div class="mb-4 max-h-[50vh] space-y-3 overflow-y-auto rounded bg-white p-4 shadow">
             @forelse ($history as $message)
                 <div class="{{ $message->role === 'user' ? 'ml-8 bg-slate-800 text-white' : 'mr-8 bg-slate-100' }} rounded p-3 text-sm">
